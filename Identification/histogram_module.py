@@ -25,15 +25,15 @@ def normalized_hist(img_gray, num_bins):
     hist=dict((name,0) for name in range(num_bins)) 
     #filling in the dictionary by adding each intensity in the array in its bin interval
     for i in arr_img: #iteration in flatten array
-        print(i)
         index=round(i/(255/num_bins))
         hist[index]+=1 #sum value will be associated to a key value (bin).
     #now we normalize each value in the dictionary (bin) for the total sum of occurrences (Sum_total)
     norm_hist=[]
+    # the counts for each bin are normalized by the total number of counts
     for value in hist.values(): 
         norm_hist.append(value/len(arr_img))
     #now we return the output in the format need fot plotting (list of values)
-    bins = list(range(start,end,neighb))
+    bins = list(range(0,255,255//num_bins))
 
     return norm_hist, bins
 
