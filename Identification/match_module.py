@@ -13,7 +13,6 @@ def rgb2gray(rgb):
     return gray
 
 
-
 # model_images - list of file names of model images
 # query_images - list of file names of query images
 #
@@ -32,11 +31,10 @@ def find_best_match(model_images, query_images, dist_type, hist_type, num_bins):
     query_hists = compute_histograms(query_images, hist_type, hist_isgray, num_bins)
     
     D = np.zeros((len(model_images), len(query_images)))
-    
-    
-    #... (your code here)
-
-
+    for query in query_hists:
+        for model in model_hists:
+            D[0,0]=dist_module.get_dist_by_name(query,model,dist_type)
+    best_match=[sorted(list(res))[-6] for res in D] #method to find best matches
     return best_match, D
 
 
@@ -46,8 +44,8 @@ def compute_histograms(image_list, hist_type, hist_isgray, num_bins):
     image_hist = []
 
     # Compute hisgoram for each image and add it at the bottom of image_hist
-
-    #... (your code here)
+    for image in image_list:
+        image_hist.append(histogram_module.get_hist_by_name(image,num_bins,hist_type))
 
     return image_hist
 
