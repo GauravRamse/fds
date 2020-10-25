@@ -12,7 +12,6 @@ sys.path.insert(0,filteringpath)
 import gauss_module
 
 
-
 #  compute histogram of image intensities, histogram should be normalized so that sum of all values equals 1
 #  assume that image intensity varies between 0 and 255
 #
@@ -24,25 +23,27 @@ def normalized_hist(img_gray, num_bins):
     arr_img=np.array(img_gray.flatten())
     diff=(255-((255//num_bins)*num_bins))//2 #we divide the range from 0 to 255 by num_bins and take the lowel bound, than we multiply this value by the num_bin (total coverage) and infer the interval that we lose on both sides of the 0-255 interval (number of shades lost on the the range)
     #we should add if total diff is odd, otherwise we use 0
+    #we lose info on 0-7 and 248-255
     start=1+diff
     end=255-diff
-    neighb=255//num_bins #number of elemnts grouped in a bin (neighboors)
-    #building dictionary by iterating the reduces range
-    hist={} #dictionaty to be used for hist
-    c_bin=1 #counter to name keys 
-    Sum_total = 0
-    for i in range(start,end,neighb): #iteration in range from 0 and 255 for number of bins, we lose info on 0-7 and 248-255
-        key="bin"+str(c_bin) #key name
-        Sum_group= (arr_img.count(e) for e in arr_img[start,start+neighb]) #sum of occurrences for each element among neighboors values (6 values)
-        hist[key]=sum(Sum_group) #sum value will be associated to a key value (bin). 
-        Sum_total+=Sum_group #partial sum will be added to total sum that will be used for normalization
-    #now we normalize each value in the dictionary (bin) for the total sum of occurrences (Sum_total)
-    norm_hist={} #normalized dictionary
-    for bin in hist.keys():
-        norm_hist[bin]=hist[bin]/Sum_total 
-    #now we return the output in the format need fot plotting (list of values)
-    return hists.values(), num_bins
+    neighb=255//num_bins #number of elements grouped in a bin (neighbors)
 
+    #dictionary to be used for hist with keys=num_bins and values 0
+    hist=dict((name,0) for name in range(num_bins)) 
+    #filling in the dictionary by adding each intensity in the array in its bin interval
+    for i in arr_img: #iteration in range from 0 and 255 with jump of number of bins, 
+        print(i)
+        index=i//(255//num_bins)
+        print(index)
+        hist[index]+=1 #sum value will be associated to a key value (bin).
+    #now we normalize each value in the dictionary (bin) for the total sum of occurrences (Sum_total)
+    norm_hist=[]
+    for value in hist.values(): 
+        norm_hist.append(value/len(arr_img))
+    #now we return the output in the format need fot plotting (list of values)
+    bins = list(range(start,end,neighb))
+
+    return norm_hist, bins
 
 
 #  Compute the *joint* histogram for each color channel in the image
@@ -92,8 +93,6 @@ def rgb_hist(img_color_double, num_bins):
     hists = hists.reshape(hists.size)
     
     return hists
-
-
 
 
 #  Compute the *joint* histogram for the R and G color channels in the image
