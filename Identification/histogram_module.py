@@ -21,20 +21,12 @@ def normalized_hist(img_gray, num_bins):
     assert len(img_gray.shape) == 2, 'image dimension mismatch'
     assert img_gray.dtype == 'float', 'incorrect image type'
     arr_img=np.array(img_gray.flatten())
-    diff=(255-((255//num_bins)*num_bins))//2 #we divide the range from 0 to 255 by num_bins and take the lowel bound, than we multiply this value by the num_bin (total coverage) and infer the interval that we lose on both sides of the 0-255 interval (number of shades lost on the the range)
-    #we should add if total diff is odd, otherwise we use 0
-    #we lose info on 0-7 and 248-255
-    start=1+diff
-    end=255-diff
-    neighb=255//num_bins #number of elements grouped in a bin (neighbors)
-
     #dictionary to be used for hist with keys=num_bins and values 0
     hist=dict((name,0) for name in range(num_bins)) 
     #filling in the dictionary by adding each intensity in the array in its bin interval
-    for i in arr_img: #iteration in range from 0 and 255 with jump of number of bins, 
+    for i in arr_img: #iteration in flatten array
         print(i)
-        index=i//(255//num_bins)
-        print(index)
+        index=round(i/(255/num_bins))
         hist[index]+=1 #sum value will be associated to a key value (bin).
     #now we normalize each value in the dictionary (bin) for the total sum of occurrences (Sum_total)
     norm_hist=[]
