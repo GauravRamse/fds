@@ -25,27 +25,46 @@ def rgb2gray(rgb):
 
 def find_best_match(model_images, query_images, dist_type, hist_type, num_bins):
 
+    #this value indicates if the rgb2gray() must be applied to the color array or not
     hist_isgray = histogram_module.is_grayvalue_hist(hist_type)
-    
+
+
     model_hists = compute_histograms(model_images, hist_type, hist_isgray, num_bins)
     query_hists = compute_histograms(query_images, hist_type, hist_isgray, num_bins)
     
     D = np.zeros((len(model_images), len(query_images)))
-    for query in query_hists:
-        for model in model_hists:
-            D[0,0]=dist_module.get_dist_by_name(query,model,dist_type)
-    best_match=[sorted(list(res))[-6] for res in D] #method to find best matches
+    for query_index in range(len(query_hists)):
+        for model_index in range(len(model_hists)):
+            D[query_index][model_index]=dist_module.get_dist_by_name(query_hists[query_index],model_hists[model_index],dist_type)
+    best_match =list(np.unravel_index(np.argmax(D, axis=None), D.shape))
+    
     return best_match, D
-
 
 
 def compute_histograms(image_list, hist_type, hist_isgray, num_bins):
     
     image_hist = []
 
-    # Compute hisgoram for each image and add it at the bottom of image_hist
+    # Compute histogram for each image and add it at the bottom of image_hist
     for image in image_list:
-        image_hist.append(histogram_module.get_hist_by_name(image,num_bins,hist_type))
+
+        #Converting the image in the image_list in array
+        img_color = np.array(Image.open(image))
+        img_color = img_color.astype('double')
+        if hist_isgray == True:
+            img_gray = rgb2gray(img_color)
+
+        #According to image_type, we compute the histogram
+        if hist_type == 'grayvalue':
+            image_hist.append(histogram_module.get_hist_by_name(img_gray,num_bins,hist_type))
+        elif hist_type == 'rgb':
+            image_hist.append(histogram_module.get_hist_by_name(img_color,num_bins,hist_type))
+        elif hist_type == 'rg':
+            image_hist.append(histogram_module.get_hist_by_name(img_color,num_bins,hist_type))
+        elif hist_type == 'dxdy':
+            image_hist.append(histogram_module.get_hist_by_name(img_gray,num_bins,hist_type))
+        else:
+            print ("Histogram type not valid")
 
     return image_hist
 

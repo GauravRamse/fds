@@ -22,7 +22,7 @@ def normalized_hist(img_gray, num_bins):
     hist=dict((name,0) for name in range(num_bins)) 
     #filling in the dictionary by adding each intensity in the array in its bin interval
     for i in arr_img: #iteration in flatten array
-        index=int(math.floor(i/(255/num_bins))) #the index value reprents which bin fit thet intenity value in the best way, in case of floats it is appoximated to the closest bin
+        index=int(math.floor(i/(256/num_bins))) #the index value reprents which bin fit thet intenity value in the best way, in case of floats it is appoximated to the closest bin
         hist[index]+=1 #sum value will be associated to a key value (bin).
     #now we normalize each value in the dictionary (bin) for the total sum of occurrences (Sum_total)
     norm_hist=[]
@@ -60,9 +60,9 @@ def rgb_hist(img_color_double, num_bins):
         # Increment the histogram bin which corresponds to the R,G,B value of the pixel i
         r,g,b= img_color_double[row,col] #unpack each value for r,g and b
         # 255/num_bins is the number of color itervals represented in each bin. If we divide the value for a specific color in a specific pixel by this value and take the inint rounded vaue we have the index of the bin that is incremented by 1
-        r_key=int(math.floor(r/(255/num_bins)))
-        g_key=int(math.floor(g/(255/num_bins)))
-        b_key=int(math.floor(b/(255/num_bins)))
+        r_key=int(math.floor(r/(256/num_bins)))
+        g_key=int(math.floor(g/(256/num_bins)))
+        b_key=int(math.floor(b/(256/num_bins)))
         r_hist[r_key]+=1
         g_hist[g_key]+=1
         b_hist[b_key]+=1
@@ -88,8 +88,11 @@ def rgb_hist(img_color_double, num_bins):
 #       - their G values fall in bin 9
 def rg_hist(img_color_double, num_bins):
     assert len(img_color_double.shape) == 3, 'image dimension mismatch'
+    print("TIPO:" ,img_color_double.dtype)
+
     assert img_color_double.dtype == 'float', 'incorrect image type'    #Define a 3D histogram  with "num_bins^3" number of entries
-    #hists = np.zeros((num_bins, num_bins, num_bins))
+    #dtype -> estimate the type of every pixel of the image
+
     #initializing dictionaries with bin_names keys (names could be changed to string bin+i instead of integers)
     r_hist=dict((name,0) for name in range(num_bins)) 
     g_hist=dict((name,0) for name in range(num_bins)) 
@@ -101,8 +104,8 @@ def rg_hist(img_color_double, num_bins):
         # Increment the histogram bin which corresponds to the R,G,B value of the pixel i
         r,g,b= img_color_double[row,col] #unpack each value for r,g and b
         # 255/num_bins is the number of color itervals represented in each bin. If we divide the value for a specific color in a specific pixel by this value and take the inint rounded vaue we have the index of the bin that is incremented by 1
-        r_key=int(math.floor(r/(255/num_bins)))
-        g_key=int(math.floor(g/(255/num_bins)))
+        r_key=int(math.floor(r/(256/num_bins)))
+        g_key=int(math.floor(g/(256/num_bins)))
         r_hist[r_key]+=1
         g_hist[g_key]+=1   
     hists_list=[]

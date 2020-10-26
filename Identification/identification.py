@@ -38,7 +38,7 @@ hist_gray2, bin_gray2 = histogram_module.normalized_hist(img_gray, num_bins_gray
 plt.bar((bin_gray1[0:-1] + bin_gray1[1:])/2, hist_gray2)
 plt.show()
 
-print('grey \n done')
+
 ## more histograms (Question 2.b)
 
 #Compose and test RGB histograms (histogram_module.rgb_hist)
@@ -51,7 +51,7 @@ plt.subplot(1,2,2)
 hist_rgb = histogram_module.rgb_hist(img_color.astype('double'), num_bins_color)
 plt.bar(np.array(range(1,hist_rgb.size+1)),hist_rgb)
 plt.show()
-print('rgb \n done')
+
 #Compose and test RG histograms (histogram_module.rg_hist)
 plt.figure(3)
 plt.subplot(1,2,1)
@@ -62,7 +62,7 @@ plt.subplot(1,2,2)
 hist_rg = histogram_module.rg_hist(img_color.astype('double'), num_bins_color)
 plt.bar(np.array(range(1,hist_rg.size+1)),hist_rg)
 plt.show()
-print('rg \n done')
+
 
 #Compose and test dxdy histograms (histogram_module.dxdy_hist)
 plt.figure(5)
@@ -74,7 +74,7 @@ plt.subplot(1,2,2)
 hist_dxdy = histogram_module.dxdy_hist(img_gray, num_bins_dxdy)
 plt.bar(np.array(range(1,hist_dxdy.size+1)),hist_dxdy)
 plt.show()
-print('dxdy \n done')
+
 ## Distance functions (Question 2.c)
 
 image_files1 = ['./model/obj1__0.png']
@@ -147,7 +147,7 @@ print('%s-%s, %s-%s, %s-%s, %s-%s'%('l2', 'grayvalue', 'l2', 'rgb', 'l2', 'rg', 
 print('%s-%s, %s-%s, %s-%s, %s-%s'%('intersect', 'grayvalue', 'intersect', 'rgb', 'intersect', 'rg', 'intersect', 'dxdy'))
 print('%s-%s, %s-%s, %s-%s, %s-%s'%('chi2', 'grayvalue', 'chi2', 'rgb', 'chi2', 'rg', 'chi2', 'dxdy'))
 
-print('2c done \n')
+
 
 
 ## Find best match (Question 3.a)
@@ -166,21 +166,16 @@ num_bins = 30;
 
 [best_match, D] = match_module.find_best_match(model_images, query_images, dist_type, hist_type, num_bins)
 
-print('3a done \n')
 
 ## visualize nearest neighbors (Question 3.b)
 query_images_vis = [query_images[i] for i in np.array([0,4,9])]
 match_module.show_neighbors(model_images, query_images_vis, dist_type, hist_type, num_bins)
 
 
-print('3b done \n')
-
 ## compute recognition percentage (Question 3.c)
 # import ipdb; ipdb.set_trace()
 num_correct = sum( best_match == range(len(query_images)))
 print('number of correct matches: %d (%f)\n'% (num_correct, 1.0 * num_correct / len(query_images)))
-
-print('3c done \n')
 
 
 
