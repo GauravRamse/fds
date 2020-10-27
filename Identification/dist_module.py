@@ -18,18 +18,17 @@ def dist_intersect(x,y):
     sum_q+=q
     sum_v+=v
     sum_min+=min([q,v])
-    #sum_q and sum_v are in the denominator so they must be != 0, in case they are zero we assign to them a very small value not to lose any information
 
   if sum_q==0:
     first_part= 0
-  else: 
+  else:
     first_part = sum_min/sum_q
-  
   if sum_v==0:
     second_part = 0
   else:
-    second_part= sum_min/sum_v
+    second_part = sum_min/sum_v
   dist_int= (first_part+second_part)*1/2 #applying formula for intersection
+  assert dist_int>=0 and dist_int<=1, 'Distance value not valid'
   return dist_int
 
 
@@ -42,6 +41,7 @@ def dist_l2(x,y):
     q=x[j]
     v=y[j] 
     sum_sq+= (q-v)**2 #applying formula for euclidean dist
+  assert sum_sq >= 0 and sum_sq <= sqrt(2), 'Distance value not valid'
   return sum_sq
 
 # Compute chi2 distance between x and y
@@ -51,14 +51,12 @@ def dist_l2(x,y):
 def dist_chi2(x,y):
   sum_chi=0
   for j in range(len(x)): #they have same len 
-    q=x[j]
-    v=y[j]
+    q=x[j]+1
+    v=y[j]+1
     den=q+v
-    if q==0 and v==0:
-      sum_chi =0
-    else:
-      sum_chi+= ((q-v)**2)/(den) #denominator
-    
+
+  sum_chi+= ((q-v)**2)/(den)
+  assert sum_chi >= 0, 'Distance value not valid'
   return sum_chi
 
 def get_dist_by_name(x, y, dist_name):
