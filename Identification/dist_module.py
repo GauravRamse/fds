@@ -19,13 +19,16 @@ def dist_intersect(x,y):
     sum_v+=v
     sum_min+=min([q,v])
     #sum_q and sum_v are in the denominator so they must be != 0, in case they are zero we assign to them a very small value not to lose any information
-  first_part = sum_min/sum_q
-  second_part= sum_min/sum_v
 
   if sum_q==0:
     first_part= 0
+  else: 
+    first_part = sum_min/sum_q
+  
   if sum_v==0:
     second_part = 0
+  else:
+    second_part= sum_min/sum_v
   dist_int= (first_part+second_part)*1/2 #applying formula for intersection
   return dist_int
 

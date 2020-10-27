@@ -32,11 +32,13 @@ def find_best_match(model_images, query_images, dist_type, hist_type, num_bins):
     model_hists = compute_histograms(model_images, hist_type, hist_isgray, num_bins)
     query_hists = compute_histograms(query_images, hist_type, hist_isgray, num_bins)
     
-    D = np.zeros((len(model_images), len(query_images)))
+    D = np.zeros((len(query_images), len(model_images))) #exchanged
     for query_index in range(len(query_hists)):
         for model_index in range(len(model_hists)):
             D[query_index][model_index]=dist_module.get_dist_by_name(query_hists[query_index],model_hists[model_index],dist_type)
-    best_match =list(np.unravel_index(np.argmax(D, axis=None), D.shape))
+    #print(D)
+    best_match = np.where(D==np.amin(D) #line to be checked
+    print(best_match)
     
     return best_match, D
 
@@ -65,7 +67,6 @@ def compute_histograms(image_list, hist_type, hist_isgray, num_bins):
             image_hist.append(histogram_module.get_hist_by_name(img_gray,num_bins,hist_type))
         else:
             print ("Histogram type not valid")
-
     return image_hist
 
 
@@ -77,10 +78,28 @@ def compute_histograms(image_list, hist_type, hist_isgray, num_bins):
 
 def show_neighbors(model_images, query_images, dist_type, hist_type, num_bins):
     
-    
-    plt.figure()
+    best,matrix=find_best_match(model_images,query_images, dist_type, hist_type, num_bins)
+    # show the top-5 neighbors
+    num_nearest = 5
 
-    num_nearest = 5  # show the top-5 neighbors
-    
-    #... (your code here)
-
+    #list of images to plot, each element of list will be printed on the same line
+    images=[]
+    plt.figure(1)
+    #iterating through query imgs
+    i=0 
+    for query_idx in range(len(query_images)):
+        i+=1    
+        #picking indexes of best 5 matches for query
+        nearest_dist=list(matrix[query_idx])
+        nearest_idx=sorted(range(len(nearest_dist)), key=lambda i: nearest_dist[i])[:num_nearest] #to be checked
+        #plotting img in i subplot position (6*3)
+        plt.subplot(6, len(images), i)
+        plt.title(f'{query_images[query_idx]}')
+        plt.plot(Image.open(query_images[query_idx]))
+        for model_idx in range(len(nearest_idx)): #plotting closest models on the side of query img
+            i+=1
+            plt.subplot(6, len(images), i)
+            plt.title(f'{model_images[model_idx]}')
+            plt.plot(Image.open(model_images[model_idx]))
+        
+    plt.show()

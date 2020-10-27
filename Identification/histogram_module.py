@@ -88,8 +88,6 @@ def rgb_hist(img_color_double, num_bins):
 #       - their G values fall in bin 9
 def rg_hist(img_color_double, num_bins):
     assert len(img_color_double.shape) == 3, 'image dimension mismatch'
-    print("TIPO:" ,img_color_double.dtype)
-
     assert img_color_double.dtype == 'float', 'incorrect image type'    #Define a 3D histogram  with "num_bins^3" number of entries
     #dtype -> estimate the type of every pixel of the image
 
