@@ -41,7 +41,7 @@ def dist_l2(x,y):
     q=x[j]
     v=y[j] 
     sum_sq+= (q-v)**2 #applying formula for euclidean dist
-  assert sum_sq >= 0 and sum_sq <= sqrt(2), 'Distance value not valid'
+  assert sum_sq >= 0 and sum_sq <= math.sqrt(2), 'Distance value not valid'
   return sum_sq
 
 # Compute chi2 distance between x and y

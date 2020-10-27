@@ -89,23 +89,12 @@ def show_neighbors(model_images, query_images, dist_type, hist_type, num_bins):
     num_nearest = 5
 
     #list of images to plot, each element of list will be printed on the same line
-    plt.figure(1)
+    #fig= plt.figure()
     #iterating through query imgs
     i=0 
     for query_idx in range(len(query_images)):
         i+=1    
         #picking indexes of best 5 matches for query
-        nearest_dist=list(matrix[query_idx])
-        nearest_idx=sorted(range(len(nearest_dist)), key=lambda i: nearest_dist[i])[:num_nearest] #to be checked
-        #plotting img in i subplot position (6*3)
-        plt.subplot(6, len(query_images), i)
-        plt.title(f'{query_images[query_idx]}')
-        print(query_images[query_idx])
-        plt.plot(Image.open(query_images[query_idx]))
-        for model_idx in range(len(nearest_idx)): #plotting closest models on the side of query img
-            i+=1
-            plt.subplot(6, len(query_images), i)
-            plt.title(f'{model_images[model_idx]}')
-            plt.plot(Image.open(model_images[model_idx]))
-        
-    plt.show()
+        models=matrix[query_idx]
+        neighbors=models.argsort()[-5:][::-1] 
+        print(neighbors)
