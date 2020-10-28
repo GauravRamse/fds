@@ -1,7 +1,6 @@
 import numpy as np
 from numpy import histogram as hist
 import math
-#Add the Filtering folder, to import the gauss_module.py file, where gaussderiv is defined (needed for dxdy_hist)
 import sys, os, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -22,14 +21,14 @@ def normalized_hist(img_gray, num_bins):
     hist=dict((name,0) for name in range(num_bins)) 
     #filling in the dictionary by adding each intensity in the array in its bin interval
     for i in arr_img: #iteration in flatten array
-        index=int(math.floor(i/(256/num_bins))) #the index value reprents which bin fit thet intenity value in the best way, in case of floats it is appoximated to the closest bin
-        hist[index]+=1 #sum value will be associated to a key value (bin).
-    #now we normalize each value in the dictionary (bin) for the total sum of occurrences (Sum_total)
+        index=int(math.floor(i/(256/num_bins))) #the index value reprents which bin includes that intensity value
+        hist[index]+=1 #sum value is associated to a key value (bin index).
+    #now we normalize each value in the dictionary (bin) for the total sum of pixels
     norm_hist=[]
     for value in hist.values(): 
         norm_hist.append(value/len(arr_img))
     #now we return the output in the format need fot plotting (list of values)
-    bins = np.array(range(0,255,255//num_bins))
+    bins = np.array(range(num_bins))
     hist = np.array(norm_hist)
     return hist, bins
 
@@ -47,19 +46,18 @@ def normalized_hist(img_gray, num_bins):
 def rgb_hist(img_color_double, num_bins):
     assert len(img_color_double.shape) == 3, 'image dimension mismatch'
     assert img_color_double.dtype == 'float', 'incorrect image type'    #Define a 3D histogram  with "num_bins^3" number of entries
-    #hists = np.zeros((num_bins, num_bins, num_bins))
-    #initializing dictionaries with bin_names keys (names could be changed to string bin+i instead of integers)
+    #initializing dictionaries with keys (bin indexes)
     r_hist=dict((name,0) for name in range(num_bins))
     g_hist=dict((name,0) for name in range(num_bins)) 
     b_hist=dict((name,0) for name in range(num_bins))
-    #for each pixel in the input image we compute partial sum and extraxt the three values of r, g and b
+    #for each pixel in the input image we extraxt the three values of r, g and b
     # Loop for each pixel i in the image
-    for i in range(img_color_double.shape[0]*img_color_double.shape[1]): #iteration in X*Y of the image matrix
-        row=int(i//img_color_double.shape[1]) #index of row
-        col=int(i-row*img_color_double.shape[1]) #index of col
+    for i in range(img_color_double.shape[0]*img_color_double.shape[1]): #iteration in len(X)*len(Y) of the image matrix
+        row=int(i//img_color_double.shape[1]) #index of row is the i index divided by the number of pixels in each row, so it increases by one each len(X) number of pixels
+        col=int(i-row*img_color_double.shape[1]) #index of col is the value of i minus the number of pxels in the rows which have already been iterated
         # Increment the histogram bin which corresponds to the R,G,B value of the pixel i
         r,g,b= img_color_double[row,col] #unpack each value for r,g and b
-        # 255/num_bins is the number of color itervals represented in each bin. If we divide the value for a specific color in a specific pixel by this value and take the inint rounded vaue we have the index of the bin that is incremented by 1
+        # 255/num_bins is the number of color itervals represented in each bin. If we divide the value for a specific color in a specific pixel by this value and take the lower bound we have the index of the bin that must be incremented by 1
         r_key=int(math.floor(r/(256/num_bins)))
         g_key=int(math.floor(g/(256/num_bins)))
         b_key=int(math.floor(b/(256/num_bins)))
@@ -67,10 +65,11 @@ def rgb_hist(img_color_double, num_bins):
         g_hist[g_key]+=1
         b_hist[b_key]+=1
     hists_list=[]
-    #Normalize the histogram such that its integral (sum) is equal 1
+    #we concatenate the three color channels
     for hist in [r_hist,g_hist,b_hist]: 
-        hists_list += hist.values()    
-    norm_hists_list= [x/(img_color_double.shape[0]*img_color_double.shape[1]*3) for x in hists_list]
+        hists_list += hist.values()  
+    #Normalize the histogram such that its integral (sum) is equal 1
+    norm_hists_list= [x/(img_color_double.shape[0]*img_color_double.shape[1]*3) for x in hists_list] #we divide by tot number of pixels*3 
     #Return the histogram as a 1D vector
     hists=np.array(norm_hists_list)
     return hists
@@ -89,29 +88,25 @@ def rgb_hist(img_color_double, num_bins):
 def rg_hist(img_color_double, num_bins):
     assert len(img_color_double.shape) == 3, 'image dimension mismatch'
     assert img_color_double.dtype == 'float', 'incorrect image type'    #Define a 3D histogram  with "num_bins^3" number of entries
-    #dtype -> estimate the type of every pixel of the image
-
-    #initializing dictionaries with bin_names keys (names could be changed to string bin+i instead of integers)
+    #same procedure of rgb_hist    
     r_hist=dict((name,0) for name in range(num_bins)) 
     g_hist=dict((name,0) for name in range(num_bins)) 
-    #for each pixel in the input image we compute partial sum and extraxt the three values of r, g and b
-    # Loop for each pixel i in the image
-    for i in range(img_color_double.shape[0]*img_color_double.shape[1]): #iteration in X*Y of the image matrix
-        row=int(i//img_color_double.shape[1]) #index of row
-        col=int(i-row*img_color_double.shape[1]) #index of col
-        # Increment the histogram bin which corresponds to the R,G,B value of the pixel i
-        r,g,b= img_color_double[row,col] #unpack each value for r,g and b
-        # 255/num_bins is the number of color itervals represented in each bin. If we divide the value for a specific color in a specific pixel by this value and take the inint rounded vaue we have the index of the bin that is incremented by 1
+   
+    for i in range(img_color_double.shape[0]*img_color_double.shape[1])
+        row=int(i//img_color_double.shape[1])
+        col=int(i-row*img_color_double.shape[1]) 
+        r,g,b= img_color_double[row,col] 
         r_key=int(math.floor(r/(256/num_bins)))
         g_key=int(math.floor(g/(256/num_bins)))
         r_hist[r_key]+=1
         g_hist[g_key]+=1   
+    
     hists_list=[]
-    #Normalize the histogram such that its integral (sum) is equal 1
     for hist in [r_hist,g_hist]: 
         hists_list += hist.values()    
+    
     norm_hists_list= [x/(img_color_double.shape[0]*img_color_double.shape[1]*2) for x in hists_list]
-    #Return the histogram as a 1D vector
+
     hists=np.array(norm_hists_list)
     return hists
 
@@ -127,28 +122,32 @@ def dxdy_hist(img_gray, num_bins):
     assert len(img_gray.shape) == 2, 'image dimension mismatch'
     assert img_gray.dtype == 'float', 'incorrect image type'
     sigma=3.0
+    
     #call gaussian derivative to obtain the two grey images
     img_gray_dx, img_gray_dy = gauss_module.gaussderiv(img_gray,sigma)
-    #we want to consider values out of the interval -6:6 as the extremes (-6,6)
-    #In order to compute the normalized histogram we need values in the 0-255 range, so we scale the original values (-6,6) in order to obtain values that are scaled in our range (0,255)
-    for img in [img_gray_dx,img_gray_dy]:
+    #we want to consider values out of the range[-6:6] as the extremes (-6 and 6)
+    #In order to compute the normalized histogram we need values in the 0-255 range, so we scale the original values (range[-6:6]) in order to obtain values that are scaled in the input format of normalized_hist (range[0:255])
+    for img in [img_gray_dx,img_gray_dy]: #we do the same on images which have been dirived in both direction x and y
       for i in range(len(img)):
         for j in range(len(img[i])):
           e=img[i][j]
+          #we check that values are in the [-6:6] range
           if e>6:
             img[i][j]=6
           elif e<-6:
             img[i][j]=-6
+          #we scale values by multiplying them for the scaling factor 255/6
           img[i][j]=img[i][j]*255/6
-    #Define a 2D histogram  with "num_bins^2" number of entries
-  
+            
     #Compute a normalized histogram for each of the two grey images
-    hist_gray_dx = normalized_hist(np.absolute(img_gray_dx),num_bins)[0]
+    #We use absolute values since for edge detection we are not interested in the fact that we move to darker areas to light areas or the contrary
+    hist_gray_dx = normalized_hist(np.absolute(img_gray_dx),num_bins)[0] #[0] since normalized_hist returns two values
     hist_gray_dy = normalized_hist(np.absolute(img_gray_dy),num_bins)[0]
+    # we concatenate two flattened arrays
     hists=list(hist_gray_dx.flatten())+list(hist_gray_dy.flatten())
     
     #Return the histogram as a 1D vector
-    hists=np.array(hists)/2 #normalization
+    hists=np.array(hists)/2 #normalization of the dx and dy normalized histograms by dividing by two
     hists = hists.reshape(hists.size)
     return hists
 
