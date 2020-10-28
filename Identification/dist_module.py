@@ -54,8 +54,7 @@ def dist_chi2(x,y):
     q=x[j]+1
     v=y[j]+1
     den=q+v
-
-  sum_chi+= ((q-v)**2)/(den)
+    sum_chi+= ((q-v)**2)/(den)
   assert sum_chi >= 0, 'Distance value not valid'
   return sum_chi
 

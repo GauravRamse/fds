@@ -126,19 +126,33 @@ def rg_hist(img_color_double, num_bins):
 def dxdy_hist(img_gray, num_bins):
     assert len(img_gray.shape) == 2, 'image dimension mismatch'
     assert img_gray.dtype == 'float', 'incorrect image type'
-
-
-    #... (your code here)
-
-
+    sigma=3.0
+    #call gaussian derivative to obtain the two grey images
+    img_gray_dx, img_gray_dy = gauss_module.gaussderiv(img_gray,sigma)
+    #we want to consider values out of the interval -6:6 as the extremes (-6,6)
+    #In order to compute the normalized histogram we need values in the 0-255 range, so we scale the original values (-6,6) in order to obtain values that are scaled in our range (0,255)
+    for row_index in range(len(img_gray_dx)):
+      for i in range(len(img_gray_dx[row_index])):
+        if img_gray_dx[row_index][i]>6:
+          img_gray_dx[row_index][i]=6
+        elif img_gray_dx[row_index][i]<-6:
+          img_gray_dx[row_index][i]=-6
+        img_gray_dx[row_index][i]=img_gray_dx[row_index][i]*255/6
+    for row_index in range(len(img_gray_dy)):
+      for i in range(len(img_gray_dy[row_index])):
+        if img_gray_dy[row_index][i]>6:
+          img_gray_dy[row_index][i]=6
+        elif img_gray_dy[row_index][i]<-6:
+          img_gray_dy[row_index][i]=-6
+        img_gray_dy[row_index][i]=img_gray_dy[row_index][i]*255/6
     #Define a 2D histogram  with "num_bins^2" number of entries
-    hists = np.zeros((num_bins, num_bins))
-
-
-    #... (your code here)
-
-
+    #hists = np.zeros((num_bins, num_bins))
+    #Compute a histogram for each of the two grey images
+    hist_gray_dx = normalized_hist(np.absolute(img_gray_dx),num_bins)[0]
+    hist_gray_dy = normalized_hist(np.absolute(img_gray_dy),num_bins)[0]
+    hists=list(hist_gray_dx.flatten())+list(hist_gray_dy.flatten())
     #Return the histogram as a 1D vector
+    hists=np.array(hists)/2
     hists = hists.reshape(hists.size)
     return hists
 
