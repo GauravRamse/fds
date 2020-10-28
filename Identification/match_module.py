@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import histogram_module
 import dist_module
 
+
 def rgb2gray(rgb):
 
     r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
@@ -36,7 +37,6 @@ def find_best_match(model_images, query_images, dist_type, hist_type, num_bins):
     for query_index in range(len(query_hists)):
         for model_index in range(len(model_hists)):
             D[query_index][model_index]=dist_module.get_dist_by_name(query_hists[query_index],model_hists[model_index],dist_type)
-    #print(D)
     # in the case in which dist_type is intersection the most similar image is the one with the biggest value (closest to 1)
     if dist_type == 'intersect':
         best_match = [np.argmax(D[index]) for index in range(len(query_hists))]
@@ -44,8 +44,7 @@ def find_best_match(model_images, query_images, dist_type, hist_type, num_bins):
     # in the case of euclidean and chisq distances we want the lowest value of distance 
     elif dist_type != 'intersect':
         best_match = [np.argmin(D[index]) for index in range(len(query_hists))] 
-    #print(best_match)  
-    #print(dict(zip(model_images,range(len(model_images)))))
+    print(best_match)  
     return best_match, D
 
 
@@ -91,10 +90,22 @@ def show_neighbors(model_images, query_images, dist_type, hist_type, num_bins):
     #list of images to plot, each element of list will be printed on the same line
     #fig= plt.figure()
     #iterating through query imgs
-    i=0 
+    plt.figure()    
+    
     for query_idx in range(len(query_images)):
-        i+=1    
+        i=1
         #picking indexes of best 5 matches for query
         models=matrix[query_idx]
-        neighbors=models.argsort()[-5:][::-1] 
-        print(neighbors)
+        neighbors=models.argsort()[-num_nearest:][::-1] #takes indices from the end of the array (biggest) and select last 5
+        name=query_images[query_idx]
+        plt.subplot(1,num_nearest+1,i)
+        plt.imshow(np.array(Image.open(name))); plt.title(f'Query {name}')
+        for j in neighbors:
+            #incrementing index which indicates subplot position
+            i+=1
+            distance=models[j]
+            name=model_images[j]
+            plt.subplot(1,num_nearest+1,i)
+            plt.imshow(np.array(Image.open(name))); plt.title(distance)        
+        plt.show()
+

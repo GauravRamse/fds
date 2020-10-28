@@ -164,8 +164,15 @@ dist_type = 'intersect';
 hist_type = 'rg'; 
 num_bins = 30;
 
+'''
+report
+distance_types = ['l2', 'intersect', 'chi2']
+hist_types = ['grayvalue', 'rgb', 'rg', 'dxdy']
+for dist in distance_types:
+    for hist in hist_type:
+        [best_match, D] = match_module.find_best_match(model_images, query_images, dist_type, hist_type, num_bins)
+'''
 [best_match, D] = match_module.find_best_match(model_images, query_images, dist_type, hist_type, num_bins)
-
 
 ## visualize nearest neighbors (Question 3.b)
 query_images_vis = [query_images[i] for i in np.array([0,4,9])]
@@ -173,10 +180,13 @@ match_module.show_neighbors(model_images, query_images_vis, dist_type, hist_type
 
 
 ## compute recognition percentage (Question 3.c)
-# import ipdb; ipdb.set_trace()
-num_correct = sum( best_match == range(len(query_images)))
-print('number of correct matches: %d (%f)\n'% (num_correct, 1.0 * num_correct / len(query_images)))
 
+#professor code was not working, sum on bools not possible
+num_correct=0
+for i in range(len(query_images)):
+    if best_match[i]==i:
+        num_correct+=1
+print('number of correct matches: %d (%f)\n'% (num_correct, 1.0 * num_correct / len(query_images)))
 
 
 ## plot recall_precision curves (Question 4)
@@ -190,7 +200,6 @@ with open('query.txt') as fp:
 query_images = [x.strip() for x in query_images] 
 
 num_bins = 20;
-
 
 plt.figure(8)
 rpc_module.compare_dist_rpc(model_images, query_images, ['chi2', 'intersect', 'l2'], 'rg', num_bins, ['r', 'g', 'b'])
