@@ -67,4 +67,3 @@ def compare_dist_rpc(model_images, query_images, dist_types, hist_type, num_bins
 
 
 
-
