@@ -36,10 +36,25 @@ def plot_rpc(D, plot_color):
     
     for idt in range(len(d)):
         tp += l[idt]
-        #... (your code here)
-        
-        #Compute precision and recall values and append them to "recall" and "precision" vectors
-        #... (your code here)
+        #    prec = 0
+        recll = 0
+        threshold = 0
+        for i in range(len(d)):
+            tp = 0
+            fp = 0
+            fn = 0
+            tn = 0
+            threshold = d[i]
+            for idt in range(len(d)):
+                if d[idt] >= threshold and l[idt] == 1:
+                    tp += 1
+                elif d[idt] >= threshold and l[idt] == 0:
+                    fp += 1
+                elif d[idt] < threshold and l[idt] == 1:
+                    fn += 1
+                else:
+                    tn += 1
+            prec = (tp / (tp + fp))
     
     plt.plot([1-precision[i] for i in range(len(precision))], recall, plot_color+'-')
 
