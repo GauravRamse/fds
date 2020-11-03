@@ -53,8 +53,8 @@ def rgb_hist(img_color_double, num_bins):
     #for each pixel in the input image we extraxt the three values of r, g and b
     # Loop for each pixel i in the image
     for i in range(img_color_double.shape[0]*img_color_double.shape[1]): #iteration in len(X)*len(Y) of the image matrix
-        row=int(i//img_color_double.shape[1]) #index of row is the i index divided by the number of pixels in each row, so it increases by one each len(X) number of pixels
-        col=int(i-row*img_color_double.shape[1]) #index of col is the value of i minus the number of pxels in the rows which have already been iterated
+        row=int(i//img_color_double.shape[0]) #index of row is the i index divided by the number of pixels in each row, so it increases by one each len(X) number of pixels
+        col=int(i-row*img_color_double.shape[0]) #index of col is the value of i minus the number of pxels in the rows which have already been iterated
         # Increment the histogram bin which corresponds to the R,G,B value of the pixel i
         r,g,b= img_color_double[row,col] #unpack each value for r,g and b
         # 255/num_bins is the number of color itervals represented in each bin. If we divide the value for a specific color in a specific pixel by this value and take the lower bound we have the index of the bin that must be incremented by 1
@@ -93,8 +93,8 @@ def rg_hist(img_color_double, num_bins):
     g_hist=dict((name,0) for name in range(num_bins)) 
    
     for i in range(img_color_double.shape[0]*img_color_double.shape[1])
-        row=int(i//img_color_double.shape[1])
-        col=int(i-row*img_color_double.shape[1]) 
+        row=int(i//img_color_double.shape[0])
+        col=int(i-row*img_color_double.shape[0]) 
         r,g,b= img_color_double[row,col] 
         r_key=int(math.floor(r/(256/num_bins)))
         g_key=int(math.floor(g/(256/num_bins)))
