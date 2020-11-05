@@ -164,14 +164,6 @@ dist_type = 'intersect';
 hist_type = 'rg'; 
 num_bins = 30;
 
-'''
-report
-distance_types = ['l2', 'intersect', 'chi2']
-hist_types = ['grayvalue', 'rgb', 'rg', 'dxdy']
-for dist in distance_types:
-    for hist in hist_type:
-        [best_match, D] = match_module.find_best_match(model_images, query_images, dist_type, hist_type, num_bins)
-'''
 [best_match, D] = match_module.find_best_match(model_images, query_images, dist_type, hist_type, num_bins)
 
 ## visualize nearest neighbors (Question 3.b)
@@ -201,19 +193,20 @@ query_images = [x.strip() for x in query_images]
 
 num_bins = 20;
 
+print('RG')
 plt.figure(8)
 rpc_module.compare_dist_rpc(model_images, query_images, ['chi2', 'intersect', 'l2'], 'rg', num_bins, ['r', 'g', 'b'])
-plt.title('RG histograms')
+plt.title(f'RG histograms - bins {num_bins}')
 plt.show()
 
-
+print('RGB')
 plt.figure(9)
 rpc_module.compare_dist_rpc(model_images, query_images, ['chi2', 'intersect', 'l2'], 'rgb', num_bins // 2, ['r', 'g', 'b'])
-plt.title('RGB histograms')
+plt.title(f'RGB histograms - bins {num_bins}')
 plt.show()
 
-
+print('dx,dy')
 plt.figure(10)
 rpc_module.compare_dist_rpc(model_images, query_images, ['chi2', 'intersect', 'l2'], 'dxdy', num_bins, ['r', 'g', 'b'])
-plt.title('dx/dy histograms')
+plt.title(f'dx/dy histograms - bins {num_bins}')
 plt.show()

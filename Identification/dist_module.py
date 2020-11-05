@@ -51,8 +51,8 @@ def dist_l2(x,y):
 def dist_chi2(x,y):
   sum_chi=0
   for j in range(len(x)): #they have same len 
-    q=x[j]+1
-    v=y[j]+1
+    q=x[j]+0.01
+    v=y[j]+0.01
     den=q+v
     sum_chi+= ((q-v)**2)/(den)
   assert sum_chi >= 0, 'Distance value not valid'
