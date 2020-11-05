@@ -21,7 +21,7 @@ def gauss(sigma):
         Gx.append(G)
 
     # Gx is a list in which we have values calculated by gaussian formula
-    return Gx, range_x
+    return np.array(Gx), range_x
 
 
 """
@@ -36,8 +36,6 @@ def gaussianfilter(img, sigma):
     # fill the kernel with the values on which the G filter is defined (range [-3*sigma,3*sigma])
     # extact the first row of the kernel
     Gx = gauss(sigma)[0]
-
-    Gx = np.array(Gx)
 
     Gx = Gx.reshape(1, Gx.size)   # This was done because input to the conv2d need 2d
 
@@ -71,7 +69,7 @@ def gaussdx(sigma):
         # Just taken derivative of gaussian formula formula
         G = -x*(np.exp((-x ** 2) / (2 * (sigma ** 2))))* (1 / (math.sqrt(2 * math.pi)* (sigma**3)))
         Dx.append(G)
-    return Dx, range_x
+    return np.array(Dx), range_x
 #
 def gaussderiv(img, sigma):
 
