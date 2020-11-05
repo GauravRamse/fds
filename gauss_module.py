@@ -17,16 +17,13 @@ def gauss(sigma):
     range_x = [i for i in range(low, high+1)]
     Gx = []
     for x in range_x:
-        G = (np.exp((-x ** 2) / (2 * (sigma ** 2))))* (1 / (math.sqrt(2 * math.pi)* sigma))
+        G = (np.exp((-x ** 2) / (2 * (sigma ** 2))))* (1 / (math.sqrt(2 * math.pi)* sigma))  # Formula for gaussian
         Gx.append(G)
 
+    # Gx is a list in which we have values calculated by gaussian formula
     return Gx, range_x
 
-Gx, _ = gauss(2)
 
-print(Gx, len(Gx))
-
-#
 """
 Implement a 2D Gaussian filter, leveraging the previous gauss.
 Implement the filter from scratch or leverage the convolve2D method (scipy.signal)
@@ -42,26 +39,22 @@ def gaussianfilter(img, sigma):
 
     Gx = np.array(Gx)
 
-
-    Gx = Gx.reshape(1, Gx.size)   # This was done because input to the conv2d need 2s
+    Gx = Gx.reshape(1, Gx.size)   # This was done because input to the conv2d need 2d
 
 
     # # computing the first convolution
     tmp_img = conv2d(img, Gx, mode='full', boundary='fill', fillvalue=0,)
-    # # using img.flatten() because the first argument of the conv2d() must be an array, as the second one
-    # # now tmp_img (the output of the first convolution) is an array
-    # # computing the second convolution (on the output of the first one)
-    
+    # now tmp_img (the output of the first convolution) is an array
+
+
+
     Gy = np.transpose(Gx)
-    # print(Gy)
+
+    # computing the second convolution (on the output of the first one)
     smooth_img = conv2d(tmp_img, Gy, mode='full', boundary='fill', fillvalue=0)
     # # SOURCE: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.convolve2d.html
 
-    # return  smooth_img
-
     return smooth_img
-
-
 
 """
 Gaussian derivative function taking as argument the standard deviation sigma
@@ -75,26 +68,24 @@ def gaussdx(sigma):
     range_x = [i for i in range(low, high+1)]
     Dx = []
     for x in range_x:
-        G = -x*(np.exp((-x ** 2) / (2 * (sigma ** 2))))* (1 / (math.sqrt(2 * math.pi)* (sigma**3)))   # Just taken derivative and written formula
+        # Just taken derivative of gaussian formula formula
+        G = -x*(np.exp((-x ** 2) / (2 * (sigma ** 2))))* (1 / (math.sqrt(2 * math.pi)* (sigma**3)))
         Dx.append(G)
-
     return Dx, range_x
-#
-#
 #
 def gaussderiv(img, sigma):
 
-    smooth_img = gaussianfilter(img, sigma)
+    smooth_img = gaussianfilter(img, sigma)   # Call gaussian filter function to get smoothen image
 
     Dx =  np.array( [[-1,0,1],   # Kernal which we will use to take derivative in x direction
              [-1,0,1],
              [-1,0,1]])
     Dx = Dx/3
 
-    Dy = np.transpose(Dx) # Kernal which we will use to take derivative in y direction
+    Dy = np.transpose(Dx)        # Kernal which we will use to take derivative in y direction
 
-    imgDx = conv2d(smooth_img, Dx, mode='full', boundary='fill', fillvalue=0)  # convolving with smoothen image
+    imgDx = conv2d(smooth_img, Dx, mode='full', boundary='fill', fillvalue=0)  # convolving with smoothen image in X direction
 
-    imgDy = conv2d(smooth_img, Dy, mode='full', boundary='fill', fillvalue=0)  # convolving with smoothen image
+    imgDy = conv2d(smooth_img, Dy, mode='full', boundary='fill', fillvalue=0)  # convolving with smoothen image in Y direction
 
     return imgDx, imgDy
