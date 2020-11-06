@@ -1,6 +1,6 @@
 # FDS homework 1
 
-Here you can download the last version of the codes and report pdf file
+Here you can download the latest version of the codes and report pdf file
 ---------------------
 **emails to use for cc:**
 - betti.1799160@studenti.uniroma1.it
