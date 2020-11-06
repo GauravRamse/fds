@@ -66,34 +66,32 @@ plt.show()
 
 # ## function gaussdx (Question 1.d)
 #
-# img_imp = np.zeros([27,27])
-# img_imp[13, 13] = 1.0
-# plt.figure(6), plt.imshow(img_imp, cmap='gray')
-#
-# sigma = 7.0
-# [Gx, x] = gauss_module.gauss(sigma)
-# [Dx, x] = gauss_module.gaussdx(sigma)
-#
-# Gx = Gx.reshape(1, Gx.size)
-# Dx = Dx.reshape(1, Dx.size)
-#
-# plt.figure(7)
-# plt.subplot(2,3,1)
-# plt.imshow(conv2(conv2(img_imp, Gx, 'same'), Gx.T, 'same') , cmap='gray')
-# plt.subplot(2,3,2)
-# plt.imshow(conv2(conv2(img_imp, Gx, 'same'), Dx.T, 'same') , cmap='gray')
-# plt.subplot(2,3,3)
-# plt.imshow(conv2(conv2(img_imp, Dx.T, 'same'), Gx, 'same') , cmap='gray')
-# plt.subplot(2,3,4)
-# plt.imshow(conv2(conv2(img_imp, Dx, 'same'), Dx.T, 'same') , cmap='gray')
-# plt.subplot(2,3,5)
-# plt.imshow(conv2(conv2(img_imp, Dx, 'same'), Gx.T, 'same') , cmap='gray')
-# plt.subplot(2,3,6)
-# plt.imshow(conv2(conv2(img_imp, Gx.T, 'same'), Dx, 'same') , cmap='gray')
-# plt.show()
-#
-#
-#
+img_imp = np.zeros([27,27])
+img_imp[13, 13] = 1.0
+plt.figure(6), plt.imshow(img_imp, cmap='gray')
+
+sigma = 7.0
+[Gx, x] = gauss_module.gauss(sigma)
+[Dx, x] = gauss_module.gaussdx(sigma)
+
+Gx = Gx.reshape(1, Gx.size)
+Dx = Dx.reshape(1, Dx.size)
+
+plt.figure(7)
+plt.subplot(2,3,1)
+plt.imshow(conv2(conv2(img_imp, Gx, 'same'), Gx.T, 'same') , cmap='gray')
+plt.subplot(2,3,2)
+plt.imshow(conv2(conv2(img_imp, Gx, 'same'), Dx.T, 'same') , cmap='gray')
+plt.subplot(2,3,3)
+plt.imshow(conv2(conv2(img_imp, Dx.T, 'same'), Gx, 'same') , cmap='gray')
+plt.subplot(2,3,4)
+plt.imshow(conv2(conv2(img_imp, Dx, 'same'), Dx.T, 'same') , cmap='gray')
+plt.subplot(2,3,5)
+plt.imshow(conv2(conv2(img_imp, Dx, 'same'), Gx.T, 'same') , cmap='gray')
+plt.subplot(2,3,6)
+plt.imshow(conv2(conv2(img_imp, Gx.T, 'same'), Dx, 'same') , cmap='gray')
+plt.show()
+
 ## function gaussderiv (Question 1.e)
 
 
